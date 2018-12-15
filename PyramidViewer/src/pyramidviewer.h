@@ -19,20 +19,20 @@ class PyramidViewer : public QMainWindow
 
 public:	
 	PyramidViewer();
-	bool loadFile(const QString &);
+	bool LoadFile(const QString &);
 	~PyramidViewer();
 
 private slots:
 	void open();
 
 private:	
-	void createControls();
-	void updateControls();
-	void createActions();	
-	void updateActions();	
-	void setImage(const QImage &newImage);
-	void selectImage(int image);
-	void sortLoadedImages(QVector<imageContainer> &vector);
+	void CreateControls();
+	void UpdateControls();
+	void CreateActions();	
+	void UpdateActions();	
+	void SetImage(const QImage &newImage);
+	void SelectImage(int image);
+	void SortLoadedImages(QVector<imageContainer> &vector);
 
 
 	QLabel *m_mainLabel;

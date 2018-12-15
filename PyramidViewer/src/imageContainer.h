@@ -8,22 +8,22 @@ private:
 	QString m_filename;
 	QVector<QImage> m_layers;
 
-	QVector<QImage> createPyramid(QImage image);
-	int numberOfLayers(int imageSide);
+	QVector<QImage> CreatePyramid(QImage image);
+	int NumberOfLayers(int imageSide);
 	
 public:
 	imageContainer();
 	imageContainer(QImage image, QString filename);	
 	~imageContainer();
 	
-	int getWidth();
-	int getHeight();
-	double getDiagonal();
-	QImage getImage();
-	QString getFilename();
-	QVector<QImage> getImageLayers();
+	int GetWidth();
+	int GetHeight();
+	double GetDiagonal();
+	QImage GetImage();
+	QString GetFilename();
+	QVector<QImage> GetImageLayers();
 
-	void setImage(QImage image);
+	void SetImage(QImage image);
 
 	bool isNull();
 };

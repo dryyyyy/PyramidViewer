@@ -23,12 +23,12 @@ PyramidViewer::PyramidViewer()
 	m_scrollArea->setVisible(false);
 	setCentralWidget(m_mainLabel);
 
-	createActions();
+	CreateActions();
 
 	resize(QGuiApplication::primaryScreen()->availableSize() / 2);
 }
 
-bool PyramidViewer::loadFile(const QString &fileName)
+bool PyramidViewer::LoadFile(const QString &fileName)
 {
 	QImageReader reader(fileName);
 	reader.setAutoTransform(true);
@@ -43,20 +43,20 @@ bool PyramidViewer::loadFile(const QString &fileName)
 	m_image = imageContainer(newImage, fileName);
 	m_imageContainerVector.push_back(m_image);
 
-	selectImage(m_imageContainerVector.size() - 1);
+	SelectImage(m_imageContainerVector.size() - 1);
 
-	sortLoadedImages(m_imageContainerVector);
+	SortLoadedImages(m_imageContainerVector);
 	
-	createControls();
+	CreateControls();
 	
 
-	m_currentImageFlag = m_loadedImagesList.indexOf(m_image.getFilename());
+	m_currentImageFlag = m_loadedImagesList.indexOf(m_image.GetFilename());
 	m_loadedImagesComboBox->setCurrentIndex(m_currentImageFlag);
 
-	setImage(newImage);
+	SetImage(newImage);
 
 	const QString message = tr("Opened \"%1\", %2x%3")
-		.arg(QDir::toNativeSeparators(fileName)).arg(m_image.getWidth()).arg(m_image.getHeight());
+		.arg(QDir::toNativeSeparators(fileName)).arg(m_image.GetWidth()).arg(m_image.GetHeight());
 	statusBar()->showMessage(message);
 
 	return true;
@@ -91,10 +91,10 @@ void PyramidViewer::open()
 	QFileDialog dialog(this, tr("Open File"));
 	initializeImageFileDialog(dialog, QFileDialog::AcceptOpen);
 
-	while (dialog.exec() == QDialog::Accepted && !loadFile(dialog.selectedFiles().first())) {}
+	while (dialog.exec() == QDialog::Accepted && !LoadFile(dialog.selectedFiles().first())) {}
 }
 
-void PyramidViewer::createControls()
+void PyramidViewer::CreateControls()
 {
 	QWidget *controls = new QWidget;
 
@@ -103,7 +103,7 @@ void PyramidViewer::createControls()
 	QHBoxLayout *controlsLeftLayout = new QHBoxLayout;
 	QHBoxLayout *controlsRightLayout = new QHBoxLayout;
 
-	updateControls();
+	UpdateControls();
 	
 	controlsLeftLayout->addWidget(m_loadedImages);
 	controlsLeftLayout->addWidget(m_loadedImagesComboBox);
@@ -124,30 +124,30 @@ void PyramidViewer::createControls()
 	connect(m_loadedImagesComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this,
 		[=](int index)
 	{
-		PyramidViewer::selectImage(index);
-		PyramidViewer::updateControls();
-		PyramidViewer::setImage(m_imageContainerVector[index].getImage());
+		PyramidViewer::SelectImage(index);
+		PyramidViewer::UpdateControls();
+		PyramidViewer::SetImage(m_imageContainerVector[index].GetImage());
 	});
 
 	connect(m_imageLayersCombobox, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated),
 		[=](int index)
 	{ 
-		PyramidViewer::setImage(m_imageContainerVector[m_currentImageFlag].getImageLayers()[index]);
+		PyramidViewer::SetImage(m_imageContainerVector[m_currentImageFlag].GetImageLayers()[index]);
 	});
 }
 
-void PyramidViewer::updateControls()
+void PyramidViewer::UpdateControls()
 {
 	m_imageLayersList.clear();
 	m_imageLayersCombobox->clear();
-	for (int i = 0; i < m_imageContainerVector[m_currentImageFlag].getImageLayers().size(); ++i) {
+	for (int i = 0; i < m_imageContainerVector[m_currentImageFlag].GetImageLayers().size(); ++i) {
 		m_imageLayersList << QString::number(i);
 	}
 
 	m_loadedImagesList.clear();
 	for (imageContainer image : m_imageContainerVector)
 	{
-		m_loadedImagesList << image.getFilename();
+		m_loadedImagesList << image.GetFilename();
 	}
 
 	m_loadedImagesComboBox->clear();
@@ -160,20 +160,20 @@ void PyramidViewer::updateControls()
 	m_loadedImagesComboBox->raise();
 }
 
-void PyramidViewer::selectImage(int index)
+void PyramidViewer::SelectImage(int index)
 {
 	m_currentImageFlag = index;
 }
 
-void PyramidViewer::sortLoadedImages(QVector<imageContainer> &vector)
+void PyramidViewer::SortLoadedImages(QVector<imageContainer> &vector)
 {
 	std::sort(vector.begin(), vector.end(), [](imageContainer a, imageContainer b)
 	{		
-		return a.getDiagonal() < b.getDiagonal();
+		return a.GetDiagonal() < b.GetDiagonal();
 	});
 }
 
-void PyramidViewer::createActions()
+void PyramidViewer::CreateActions()
 {
 	QMenu *fileMenu = menuBar()->addMenu(tr("File"));
 
@@ -184,7 +184,7 @@ void PyramidViewer::createActions()
 	exitAct->setShortcut(tr("Ctrl+Q"));
 }
 
-void PyramidViewer::updateActions()
+void PyramidViewer::UpdateActions()
 {
 	if (!m_image.isNull()) {
 		m_mainLabel->setVisible(true);
@@ -194,18 +194,18 @@ void PyramidViewer::updateActions()
 	}	
 }
 
-void PyramidViewer::setImage(const QImage &newImage)
+void PyramidViewer::SetImage(const QImage &newImage)
 {
-	m_image.setImage(newImage);
-	QPixmap pixmap = QPixmap::fromImage(m_image.getImage());
-	m_currentLayerResolution->setText("Size: " + QString::number(m_image.getWidth()) + "x" + QString::number(m_image.getHeight()));
+	m_image.SetImage(newImage);
+	QPixmap pixmap = QPixmap::fromImage(m_image.GetImage());
+	m_currentLayerResolution->setText("Size: " + QString::number(m_image.GetWidth()) + "x" + QString::number(m_image.GetHeight()));
 
-	pixmap = pixmap.scaledToWidth(m_imageContainerVector[m_currentImageFlag].getWidth());
+	pixmap = pixmap.scaledToWidth(m_imageContainerVector[m_currentImageFlag].GetWidth());
 
 	m_imageLabel->setPixmap(pixmap);
 
 	m_scrollArea->setVisible(true);
-	updateActions();
+	UpdateActions();
 
 	m_imageLabel->adjustSize();
 	m_imageLabel->setScaledContents(true);

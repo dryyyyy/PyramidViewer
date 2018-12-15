@@ -2,10 +2,10 @@
 
 #include "imageContainer.h"
 
-QVector<QImage> imageContainer::createPyramid(QImage image)
+QVector<QImage> imageContainer::CreatePyramid(QImage image)
 {
 	int imageSide = image.width();
-	int length = numberOfLayers(imageSide);
+	int length = NumberOfLayers(imageSide);
 	QVector<QImage> layers;
 	layers.push_back(image);
 
@@ -17,7 +17,7 @@ QVector<QImage> imageContainer::createPyramid(QImage image)
 	return layers;
 }
 
-int imageContainer::numberOfLayers(int imageSide)
+int imageContainer::NumberOfLayers(int imageSide)
 {
 	return std::log2(imageSide);
 }
@@ -30,7 +30,7 @@ imageContainer::imageContainer(QImage image, QString filename)
 {
 	m_image = image;
 	m_filename = filename;
-	m_layers = createPyramid(image);
+	m_layers = CreatePyramid(image);
 }
 
 imageContainer::~imageContainer()
@@ -38,39 +38,39 @@ imageContainer::~imageContainer()
 }
 
 // Getters
-int imageContainer::getWidth()
+int imageContainer::GetWidth()
 {
 	return m_image.width();
 }
 
-int imageContainer::getHeight()
+int imageContainer::GetHeight()
 {
 	return m_image.height();
 }
 
-double imageContainer::getDiagonal()
+double imageContainer::GetDiagonal()
 {
 	return std::sqrt(m_image.width() * m_image.width() + m_image.height() * m_image.height());
 }
 
-QImage imageContainer::getImage()
+QImage imageContainer::GetImage()
 {
 	return m_image;
 }
 
-QString imageContainer::getFilename()
+QString imageContainer::GetFilename()
 {
 	QFileInfo fi(m_filename);
 	return fi.fileName();
 }
 
-QVector<QImage> imageContainer::getImageLayers()
+QVector<QImage> imageContainer::GetImageLayers()
 {
 	return m_layers;
 }
 
 // Setters
-void imageContainer::setImage(QImage image)
+void imageContainer::SetImage(QImage image)
 {
 	m_image = image;
 }
