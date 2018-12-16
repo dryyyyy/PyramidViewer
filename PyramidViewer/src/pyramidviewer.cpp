@@ -40,7 +40,7 @@ bool PyramidViewer::LoadFile(const QString &fileName)
 		return false;
 	}
 
-	m_image = imageContainer(newImage, fileName);
+	m_image = ImageContainer(newImage, fileName);
 	m_imageContainerVector.push_back(m_image);
 
 	SelectImage(m_imageContainerVector.size() - 1);
@@ -145,7 +145,7 @@ void PyramidViewer::UpdateControls()
 	}
 
 	m_loadedImagesList.clear();
-	for (imageContainer image : m_imageContainerVector)
+	for (ImageContainer image : m_imageContainerVector)
 	{
 		m_loadedImagesList << image.GetFilename();
 	}
@@ -165,9 +165,9 @@ void PyramidViewer::SelectImage(int index)
 	m_currentImageFlag = index;
 }
 
-void PyramidViewer::SortLoadedImages(QVector<imageContainer> &vector)
+void PyramidViewer::SortLoadedImages(QVector<ImageContainer> &vector)
 {
-	std::sort(vector.begin(), vector.end(), [](imageContainer a, imageContainer b)
+	std::sort(vector.begin(), vector.end(), [](ImageContainer a, ImageContainer b)
 	{		
 		return a.GetDiagonal() < b.GetDiagonal();
 	});
@@ -186,7 +186,7 @@ void PyramidViewer::CreateActions()
 
 void PyramidViewer::UpdateActions()
 {
-	if (!m_image.isNull()) {
+	if (!m_image.IsNull()) {
 		m_mainLabel->setVisible(true);
 	}
 	else {

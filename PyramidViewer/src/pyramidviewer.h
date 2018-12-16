@@ -32,7 +32,7 @@ private:
 	void UpdateActions();	
 	void SetImage(const QImage &newImage);
 	void SelectImage(int image);
-	void SortLoadedImages(QVector<imageContainer> &vector);
+	void SortLoadedImages(QVector<ImageContainer> &vector);
 
 
 	QLabel *m_mainLabel;
@@ -43,8 +43,8 @@ private:
 	QComboBox *m_imageLayersCombobox;
 	QLabel *m_loadedImages;
 	QLabel *m_imageLayer;
-	imageContainer m_image;
-	QVector<imageContainer> m_imageContainerVector;
+	ImageContainer m_image;
+	QVector<ImageContainer> m_imageContainerVector;
 	QVector<QString> m_imageFilenames;	
 	QStringList m_imageLayersList;
 	int m_currentImageFlag;
