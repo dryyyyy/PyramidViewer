@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <QImage>
 
 class ImageContainer
@@ -6,6 +7,8 @@ class ImageContainer
 public:
 	ImageContainer();
 	ImageContainer(QImage image, QString filename);
+	ImageContainer(const ImageContainer &other);
+	ImageContainer& operator=(ImageContainer other);
 	~ImageContainer();
 
 	int GetWidth();
@@ -18,11 +21,7 @@ public:
 	bool IsNull();
 
 private:
-	QVector<QImage> CreatePyramid(QImage image);
-	int GetNumberOfLayers(int imageSide);
-
-	QImage m_image;
-	QString m_filename;
-	QVector<QImage> m_layers;	
+	struct Impl;
+	std::unique_ptr<Impl> pimpl;
 };
 

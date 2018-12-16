@@ -2,7 +2,23 @@
 
 #include "imageContainer.h"
 
-QVector<QImage> ImageContainer::CreatePyramid(QImage image)
+struct ImageContainer::Impl
+{
+	Impl(QImage image, QString filename) : m_image(image), m_filename(filename) {
+		m_layers = CreatePyramid(image);
+	}
+
+	QVector<QImage> CreatePyramid(QImage image);
+	int GetNumberOfLayers(int imageSide);
+
+	QImage m_image;
+	QString m_filename;
+	QVector<QImage> m_layers;
+
+
+};
+
+QVector<QImage> ImageContainer::Impl::CreatePyramid(QImage image)
 {
 	int imageSide = image.width();
 	int length = GetNumberOfLayers(imageSide);
@@ -17,7 +33,7 @@ QVector<QImage> ImageContainer::CreatePyramid(QImage image)
 	return layers;
 }
 
-int ImageContainer::GetNumberOfLayers(int imageSide)
+int ImageContainer::Impl::GetNumberOfLayers(int imageSide)
 {
 	return std::log2(imageSide);
 }
@@ -26,11 +42,14 @@ ImageContainer::ImageContainer()
 {
 }
 
-ImageContainer::ImageContainer(QImage image, QString filename)
+ImageContainer::ImageContainer(QImage image, QString filename) : pimpl(new Impl(image, filename)) {}
+
+ImageContainer::ImageContainer(const ImageContainer &other) : pimpl(new Impl(*other.pimpl)) {}
+
+ImageContainer& ImageContainer::operator=(ImageContainer other)
 {
-	m_image = image;
-	m_filename = filename;
-	m_layers = CreatePyramid(image);
+	swap(pimpl, other.pimpl);
+	return *this;
 }
 
 ImageContainer::~ImageContainer()
@@ -40,46 +59,46 @@ ImageContainer::~ImageContainer()
 // Getters
 int ImageContainer::GetWidth()
 {
-	return m_image.width();
+	return pimpl->m_image.width();
 }
 
 int ImageContainer::GetHeight()
 {
-	return m_image.height();
+	return pimpl->m_image.height();
 }
 
 double ImageContainer::GetDiagonal()
 {
-	return std::sqrt(m_image.width() * m_image.width() + m_image.height() * m_image.height());
+	return std::sqrt(pimpl->m_image.width() * pimpl->m_image.width() + pimpl->m_image.height() * pimpl->m_image.height());
 }
 
 QImage ImageContainer::GetImage()
 {
-	return m_image;
+	return pimpl->m_image;
 }
 
 QString ImageContainer::GetFilename()
 {
-	QFileInfo fi(m_filename);
+	QFileInfo fi(pimpl->m_filename);
 	return fi.fileName();
 }
 
 QVector<QImage> ImageContainer::GetImageLayers()
 {
-	return m_layers;
+	return pimpl->m_layers;
 }
 
 // Setters
 void ImageContainer::SetImage(QImage image)
 {
-	m_image = image;
+	pimpl->m_image = image;
 }
 
 
 
 bool ImageContainer::IsNull()
 {
-	if (m_image.isNull()) {
+	if (pimpl->m_image.isNull()) {
 		return true;
 	}
 	else {
